@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>My Passport</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #DCE9E6;
+  --paper: #F5FAF8;
+  --ink: #1E2A32;
+  --ink-soft: #4E5D66;
+  --line: #B9CCC7;
+  --cover: #1F3A5F;
+  --cover-ink: #F5FAF8;
+  --teal: #1F7A74;
+  --berry: #A23B72;
+  --gold: #B9831A;
+  --focus: #A23B72;
+  --field: #FFFFFF;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1A1D;
+    --paper: #18262A;
+    --ink: #E5EEEC;
+    --ink-soft: #A6B7B3;
+    --line: #2F4448;
+    --cover: #2B4E7C;
+    --cover-ink: #F5FAF8;
+    --teal: #5CC2B9;
+    --berry: #E58BB8;
+    --gold: #E6B85A;
+    --focus: #E58BB8;
+    --field: #1F3034;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0F1A1D;
+  --paper: #18262A;
+  --ink: #E5EEEC;
+  --ink-soft: #A6B7B3;
+  --line: #2F4448;
+  --cover: #2B4E7C;
+  --cover-ink: #F5FAF8;
+  --teal: #5CC2B9;
+  --berry: #E58BB8;
+  --gold: #E6B85A;
+  --focus: #E58BB8;
+  --field: #1F3034;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Atkinson Hyperlegible", "Verdana", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.55;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  background: var(--bg);
+}
+h1, h2, h3 { font-family: "Bricolage Grotesque", "Trebuchet MS", sans-serif; line-height: 1.15; }
+button, input, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+.wrap { max-width: 720px; margin: 0 auto; padding: 20px 18px 40px; }
+.view[hidden] { display: none; }
+.hide { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Cover */
+.cover {
+  background: var(--cover);
+  color: var(--cover-ink);
+  border-radius: 14px 14px 4px 4px;
+  padding: 40px 28px 34px;
+  position: relative;
+  overflow: hidden;
+}
+.cover::after {
+  content: "";
+  position: absolute;
+  right: -40px;
+  top: -40px;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  border: 2px dashed rgba(245, 250, 248, 0.35);
+}
+.cover .mark {
+  font-family: "Bricolage Grotesque", sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  opacity: 0.85;
+  margin: 0 0 22px;
+}
+.cover h1 { font-weight: 800; font-size: clamp(2.2rem, 7vw, 3.2rem); margin: 0 0 14px; max-width: 14ch; }
+.cover p { margin: 0; max-width: 46ch; font-size: 1.05rem; }
+.cover-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+.btn {
+  border: 2px solid transparent;
+  background: var(--berry);
+  color: #FFFFFF;
+  border-radius: 999px;
+  padding: 10px 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.cover .btn.alt { background: transparent; border-color: var(--cover-ink); color: var(--cover-ink); }
+.btn.quiet { background: transparent; color: var(--ink); border-color: var(--line); }
+.btn.small { padding: 6px 14px; font-size: 0.95rem; }
+
+.page {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-top: none;
+  border-radius: 4px 4px 14px 14px;
+  padding: 24px 26px 26px;
+}
+.promises { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.promises li { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; }
+.promises .ico { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--bg); font-size: 1.1rem; }
+.promises b { display: block; }
+.help {
+  margin-top: 22px;
+  padding: 14px 16px;
+  border-left: 4px solid var(--teal);
+  background: var(--bg);
+  border-radius: 4px;
+  font-size: 0.95rem;
+}
+.help p { margin: 0 0 6px; }
+.help p:last-child { margin: 0; }
+
+/* Editor */
+.bar { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+.bar h2 { margin: 0; font-size: 1.6rem; font-weight: 800; }
+.stamps { display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 10px; margin-bottom: 8px; }
+.stamp {
+  flex: 0 0 auto;
+  border: 2px dashed var(--line);
+  background: var(--paper);
+  border-radius: 10px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-size: 0.92rem;
+  white-space: nowrap;
+}
+.stamp.filled { border-style: solid; border-color: var(--teal); color: var(--teal); font-weight: 700; }
+.stamp[aria-current="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.section-card { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; padding: 22px 22px 18px; }
+.section-card h3 { margin: 0 0 4px; font-size: 1.45rem; font-weight: 800; }
+.section-card .why { margin: 0 0 16px; color: var(--ink-soft); }
+.share-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--bg);
+  margin-bottom: 18px;
+}
+.share-row span { font-size: 0.95rem; }
+.switch { position: relative; width: 52px; height: 30px; flex: 0 0 auto; }
+.switch input { position: absolute; opacity: 0; width: 100%; height: 100%; margin: 0; cursor: pointer; }
+.switch .track { position: absolute; inset: 0; border-radius: 999px; background: var(--line); transition: background 120ms; }
+.switch .knob { position: absolute; top: 3px; left: 3px; width: 24px; height: 24px; border-radius: 50%; background: #FFFFFF; transition: transform 120ms; }
+.switch input:checked ~ .track { background: var(--teal); }
+.switch input:checked ~ .knob { transform: translateX(22px); }
+.switch input:focus-visible ~ .track { outline: 3px solid var(--focus); outline-offset: 2px; }
+.field { margin-bottom: 16px; }
+.field label { display: block; font-weight: 700; margin-bottom: 6px; }
+.field input, .field textarea {
+  width: 100%;
+  border: 1px solid var(--line);
+  background: var(--field);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.field textarea { min-height: 78px; resize: vertical; }
+.field input::placeholder, .field textarea::placeholder { color: var(--ink-soft); opacity: 0.8; }
+.nav-row { display: flex; justify-content: space-between; gap: 10px; margin-top: 6px; flex-wrap: wrap; }
+.saved { color: var(--teal); font-size: 0.9rem; min-height: 1.4em; margin-top: 8px; }
+
+/* Passport view */
+.example-note {
+  background: var(--gold);
+  color: #1E2A32;
+  border-radius: 10px;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+  font-weight: 700;
+}
+.passport { background: var(--paper); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.passport-head { background: var(--cover); color: var(--cover-ink); padding: 26px 26px 22px; }
+.passport-head h2 { margin: 0; font-size: clamp(1.9rem, 6vw, 2.6rem); font-weight: 800; }
+.passport-head p { margin: 4px 0 0; opacity: 0.9; }
+.passport-body { padding: 6px 26px 24px; }
+.p-section { padding: 18px 0; border-bottom: 1px dashed var(--line); }
+.p-section:last-child { border-bottom: none; }
+.p-section h3 { margin: 0 0 10px; font-size: 1.2rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+.p-section h3 .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--berry); display: inline-block; }
+.p-item { margin: 0 0 10px; }
+.p-item dt { font-size: 0.88rem; color: var(--ink-soft); font-weight: 700; }
+.p-item dd { margin: 2px 0 0; white-space: pre-line; }
+.p-foot { padding: 14px 26px 22px; color: var(--ink-soft); font-size: 0.92rem; border-top: 1px solid var(--line); }
+.empty { padding: 26px; text-align: center; color: var(--ink-soft); }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 0; align-items: center; }
+.toast { color: var(--teal); font-weight: 700; font-size: 0.95rem; }
+.danger { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 0.95rem; color: var(--ink-soft); }
+.danger .btn { background: transparent; color: var(--berry); border-color: var(--berry); }
+.theme-toggle { background: none; border: none; color: var(--ink-soft); text-decoration: underline; cursor: pointer; padding: 0; font-size: 0.9rem; }
+footer.small { text-align: center; color: var(--ink-soft); font-size: 0.85rem; margin-top: 22px; }
+
+@media (max-width: 520px) {
+  .cover { padding: 32px 22px 28px; }
+  .page, .section-card, .passport-body, .passport-head, .p-foot { padding-left: 18px; padding-right: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .switch .track, .switch .knob { transition: none; }
+}
+@media print {
+  body { background: #FFFFFF; }
+  .no-print { display: none !important; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <section class="view" id="view-start" aria-labelledby="startTitle">
+    <div class="cover">
+      <p class="mark">My Passport</p>
+      <h1 id="startTitle">Your story, in your words.</h1>
+      <p>Every time you move, new people need to know things about you. This lets you tell them once, your way, and only what you choose.</p>
+      <div class="cover-actions">
+        <button class="btn" type="button" data-go="edit">Start mine</button>
+        <button class="btn alt" type="button" id="seeExample">See an example</button>
+      </div>
+    </div>
+    <div class="page">
+      <ul class="promises">
+        <li><span class="ico" aria-hidden="true">🔒</span><span><b>It stays on this device.</b>Nothing you type is sent anywhere. There’s no account and no sign-in.</span></li>
+        <li><span class="ico" aria-hidden="true">🎚️</span><span><b>You decide what gets shared.</b>Every section has a switch. If it’s off, it stays out of the version you show people.</span></li>
+        <li><span class="ico" aria-hidden="true">⏭️</span><span><b>Skip anything.</b>There are no wrong answers and nothing is required. Come back and change it whenever you want.</span></li>
+        <li><span class="ico" aria-hidden="true">🚫</span><span><b>Leave out private details.</b>Don’t put passwords, Social Security numbers, case numbers, or addresses here.</span></li>
+      </ul>
+      <div class="help">
+        <p><b>If something isn’t okay where you’re living,</b> tell your caseworker, your CASA or guardian ad litem, a teacher, or another adult you trust.</p>
+        <p>You can also call or text the Childhelp National Child Abuse Hotline at 1-800-422-4453, any time. If you’re in danger right now, call 911.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-edit" aria-labelledby="editTitle" hidden>
+    <div class="bar">
+      <h2 id="editTitle">My Passport</h2>
+      <button class="btn small" type="button" data-go="share">See what I’d share</button>
+    </div>
+    <nav class="stamps" id="stamps" aria-label="Sections"></nav>
+    <div class="section-card" id="sectionCard"></div>
+    <p class="saved" id="savedNote" role="status" aria-live="polite"></p>
+    <div class="danger">
+      <p>Want to start over or hand this device back? Clearing removes everything you’ve written from this device.</p>
+      <button class="btn small" type="button" id="clearBtn">Clear everything</button>
+    </div>
+  </section>
+
+  <section class="view" id="view-share" aria-labelledby="shareTitle" hidden>
+    <div id="exampleNote"></div>
+    <article class="passport" id="passport"></article>
+    <div class="actions no-print" id="shareActions"></div>
+  </section>
+
+  <footer class="small no-print">
+    <button class="theme-toggle" type="button" id="themeBtn">Switch light or dark</button>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var SECTIONS = [
+    { id: 'me', title: 'About me', why: 'The basics you want people to know first.', share: true, fields: [
+      { k: 'name', label: 'The name I like to be called', ph: 'For example: Maya' },
+      { k: 'pronouns', label: 'My pronouns', ph: 'For example: she/her' },
+      { k: 'proud', label: 'Things I’m proud of', ph: 'For example: I can braid hair really well. I made the honor roll.', long: true },
+      { k: 'fun', label: 'What I love doing', ph: 'For example: drawing, basketball, anything with my little brother', long: true }
+    ]},
+    { id: 'comfort', title: 'What helps me feel okay', why: 'New places are a lot. Tell people what helps.', share: true, fields: [
+      { k: 'calm', label: 'When I’m stressed, this helps', ph: 'For example: headphones and some time alone in my room', long: true },
+      { k: 'items', label: 'Things that go everywhere with me', ph: 'For example: my gray hoodie and a photo of my mom', long: true },
+      { k: 'night', label: 'My nighttime routine', ph: 'For example: I shower at night and sleep better with a little light on', long: true }
+    ]},
+    { id: 'food', title: 'Food', why: 'So the first dinner in a new place isn’t a guessing game.', share: true, fields: [
+      { k: 'love', label: 'Foods I love', ph: 'For example: rice and beans, mango, spicy chips' },
+      { k: 'no', label: 'Foods I don’t eat', ph: 'For example: mushrooms, or anything my faith doesn’t allow' },
+      { k: 'allergy', label: 'Allergies or foods that make me sick', ph: 'For example: peanuts, and it’s serious' }
+    ]},
+    { id: 'care', title: 'Taking care of me', why: 'The everyday things people often get wrong.', share: true, fields: [
+      { k: 'hair', label: 'Hair and skin care', ph: 'For example: I need a wide-tooth comb and leave-in conditioner', long: true },
+      { k: 'health', label: 'Health things to know', ph: 'For example: I wear glasses. My caseworker has my medicine details.', long: true }
+    ]},
+    { id: 'school', title: 'School', why: 'What helps you learn, and why school matters to you.', share: true, fields: [
+      { k: 'school', label: 'My school and grade', ph: 'For example: Lincoln Middle School, 8th grade' },
+      { k: 'learn', label: 'What helps me learn', ph: 'For example: sitting near the front, extra time on tests', long: true },
+      { k: 'stay', label: 'Staying at my school matters to me because', ph: 'For example: my friends and my art teacher are there', long: true }
+    ]},
+    { id: 'people', title: 'My people', why: 'The people who matter to you. This one starts private.', share: false, fields: [
+      { k: 'who', label: 'People who matter to me', ph: 'For example: my brother, my grandma, my best friend, my coach', long: true },
+      { k: 'contact', label: 'Who I want help staying in touch with', ph: 'For example: my brother, every week if possible', long: true }
+    ]},
+    { id: 'know', title: 'Please know', why: 'What you want people to do, and not do. You never have to explain why.', share: true, fields: [
+      { k: 'hard', label: 'Things that are hard for me', ph: 'For example: loud arguments, new places at night', long: true },
+      { k: 'please', label: 'Please do', ph: 'For example: knock before coming in, and tell me what’s happening before it happens', long: true },
+      { k: 'dont', label: 'Please don’t', ph: 'For example: go through my stuff, or ask me to tell my whole story the first day', long: true },
+      { k: 'later', label: 'Topics I’d rather not talk about yet', ph: 'Just name the topic. No details needed.', long: true }
+    ]}
+  ];
+
+  var EXAMPLE = {
+    share: { me: true, comfort: true, food: true, care: true, school: true, people: false, know: true },
+    data: {
+      me: { name: 'Maya', pronouns: 'she/her', proud: 'I can braid hair really well and I do my little brother’s. I made the honor roll last spring.', fun: 'Drawing, basketball, and anything with my brother Eli.' },
+      comfort: { calm: 'Headphones and some time alone in my room. Please don’t take it personally. I’ll come out when I’m ready.', items: 'My gray hoodie and a photo of my mom and Eli.', night: 'I shower at night. I sleep better with a small light on and the door cracked open.' },
+      food: { love: 'Rice and beans, mango, spicy chips', no: 'Mushrooms', allergy: 'Peanuts. This one is serious.' },
+      care: { hair: 'I need a wide-tooth comb and leave-in conditioner. Please ask before touching my hair.', health: 'I wear glasses. I take a medicine every morning, and my caseworker has the details.' },
+      school: { school: 'Lincoln Middle School, 8th grade', learn: 'Sitting near the front. Extra time on tests. I have an IEP.', stay: 'My friends are there, and my art teacher believes in me.' },
+      people: { who: 'My brother Eli, my grandma, my best friend Tasha', contact: 'Eli, every week if possible' },
+      know: { hard: 'Loud arguments. Going somewhere new at night.', please: 'Knock before coming in. Tell me what’s going to happen before it happens.', dont: 'Go through my stuff. Ask me to tell my whole story the first day.', later: 'Why I came into care' }
+    },
+    updated: '2026-10-19'
+  };
+
+  var KEY = 'my-passport-v1';
+  var state = blank();
+  var mode = 'mine';
+  var current = 0;
+
+  function blank() {
+    var share = {};
+    SECTIONS.forEach(function (s) { share[s.id] = s.share; });
+    return { share: share, data: {}, updated: null };
+  }
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) {
+        var s = JSON.parse(raw);
+        if (s && s.data && s.share) state = s;
+      }
+    } catch (e) {}
+  }
+  function save() {
+    state.updated = new Date().toISOString().slice(0, 10);
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+    var note = document.getElementById('savedNote');
+    note.textContent = 'Saved on this device';
+    clearTimeout(save.t);
+    save.t = setTimeout(function () { note.textContent = ''; }, 1600);
+  }
+  load();
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function val(src, sid, k) { return ((src.data[sid] || {})[k] || '').trim(); }
+  function sectionFilled(src, s) { return s.fields.some(function (f) { return val(src, s.id, f.k); }); }
+  function fmtDate(iso) {
+    if (!iso) return '';
+    var d = new Date(iso + 'T12:00:00');
+    return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
+
+  /* Views */
+  var VIEWS = ['start', 'edit', 'share'];
+  function show(v) {
+    if (VIEWS.indexOf(v) === -1) v = 'start';
+    if (v === 'edit') mode = 'mine';
+    VIEWS.forEach(function (x) { document.getElementById('view-' + x).hidden = x !== v; });
+    if (v === 'edit') renderEditor();
+    if (v === 'share') renderPassport();
+    window.scrollTo(0, 0);
+  }
+  document.addEventListener('click', function (e) {
+    var g = e.target.closest('[data-go]');
+    if (g) show(g.getAttribute('data-go'));
+  });
+  document.getElementById('seeExample').addEventListener('click', function () {
+    mode = 'example';
+    show('share');
+  });
+
+  /* Editor */
+  function renderStamps() {
+    document.getElementById('stamps').innerHTML = SECTIONS.map(function (s, i) {
+      return '<button type="button" class="stamp' + (sectionFilled(state, s) ? ' filled' : '') + '" data-i="' + i + '" aria-current="' + (i === current) + '">' +
+        (sectionFilled(state, s) ? '\u2713 ' : '') + esc(s.title) + '</button>';
+    }).join('');
+  }
+  function renderEditor() {
+    renderStamps();
+    var s = SECTIONS[current];
+    var fields = s.fields.map(function (f) {
+      var id = 'f-' + s.id + '-' + f.k;
+      var v = esc(val(state, s.id, f.k));
+      var input = f.long
+        ? '<textarea id="' + id + '" data-k="' + f.k + '" placeholder="' + esc(f.ph) + '">' + v + '</textarea>'
+        : '<input id="' + id + '" data-k="' + f.k + '" placeholder="' + esc(f.ph) + '" value="' + v + '">';
+      return '<div class="field"><label for="' + id + '">' + esc(f.label) + '</label>' + input + '</div>';
+    }).join('');
+    var on = !!state.share[s.id];
+    document.getElementById('sectionCard').innerHTML =
+      '<h3>' + esc(s.title) + '</h3><p class="why">' + esc(s.why) + '</p>' +
+      '<div class="share-row"><span id="shareLbl">' + (on ? 'This section is in the version I share' : 'This section stays private') + '</span>' +
+      '<label class="switch"><span class="hide">Include ' + esc(s.title) + ' in the version I share</span>' +
+      '<input type="checkbox" id="shareToggle"' + (on ? ' checked' : '') + '><span class="track"></span><span class="knob"></span></label></div>' +
+      fields +
+      '<div class="nav-row">' +
+      (current > 0 ? '<button type="button" class="btn quiet small" data-step="-1">Back</button>' : '<span></span>') +
+      (current < SECTIONS.length - 1 ? '<button type="button" class="btn small" data-step="1">Next: ' + esc(SECTIONS[current + 1].title) + '</button>'
+        : '<button type="button" class="btn small" data-go="share">See what I’d share</button>') +
+      '</div>';
+  }
+  document.getElementById('stamps').addEventListener('click', function (e) {
+    var b = e.target.closest('.stamp');
+    if (!b) return;
+    current = Number(b.getAttribute('data-i'));
+    renderEditor();
+  });
+  document.getElementById('sectionCard').addEventListener('input', function (e) {
+    var k = e.target.getAttribute('data-k');
+    if (!k) return;
+    var sid = SECTIONS[current].id;
+    state.data[sid] = state.data[sid] || {};
+    state.data[sid][k] = e.target.value;
+    save();
+  });
+  document.getElementById('sectionCard').addEventListener('change', function (e) {
+    if (e.target.id === 'shareToggle') {
+      var sid = SECTIONS[current].id;
+      state.share[sid] = e.target.checked;
+      document.getElementById('shareLbl').textContent = e.target.checked ? 'This section is in the version I share' : 'This section stays private';
+      save();
+    } else if (e.target.getAttribute('data-k')) {
+      renderStamps();
+    }
+  });
+  document.getElementById('sectionCard').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-step]');
+    if (!b) return;
+    current = Math.max(0, Math.min(SECTIONS.length - 1, current + Number(b.getAttribute('data-step'))));
+    renderEditor();
+    document.getElementById('sectionCard').scrollIntoView({ block: 'start' });
+  });
+
+  var clearBtn = document.getElementById('clearBtn');
+  var clearArmed = false;
+  clearBtn.addEventListener('click', function () {
+    if (!clearArmed) {
+      clearArmed = true;
+      clearBtn.textContent = 'Yes, clear everything';
+      setTimeout(function () { clearArmed = false; clearBtn.textContent = 'Clear everything'; }, 5000);
+      return;
+    }
+    clearArmed = false;
+    clearBtn.textContent = 'Clear everything';
+    state = blank();
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    current = 0;
+    renderEditor();
+    document.getElementById('savedNote').textContent = 'Cleared from this device';
+  });
+
+  /* Passport */
+  var passportText = '';
+  function renderPassport() {
+    var src = mode === 'example' ? EXAMPLE : state;
+    var name = val(src, 'me', 'name');
+    var pron = val(src, 'me', 'pronouns');
+    var shared = SECTIONS.filter(function (s) { return src.share[s.id] && sectionFilled(src, s); });
+
+    document.getElementById('exampleNote').innerHTML = mode === 'example'
+      ? '<p class="example-note">This is an example. Maya isn’t a real person.</p>' : '';
+
+    var body = '';
+    var text = [(name ? 'Hi, I’m ' + name + '.' : 'Hi, this is my passport.') + (pron ? ' (' + pron + ')' : '')];
+    shared.forEach(function (s) {
+      var items = s.fields.filter(function (f) {
+        return val(src, s.id, f.k) && !(s.id === 'me' && (f.k === 'name' || f.k === 'pronouns'));
+      });
+      if (!items.length) return;
+      body += '<section class="p-section"><h3><span class="dot" aria-hidden="true"></span>' + esc(s.title) + '</h3><dl>' +
+        items.map(function (f) {
+          return '<div class="p-item"><dt>' + esc(f.label) + '</dt><dd>' + esc(val(src, s.id, f.k)) + '</dd></div>';
+        }).join('') + '</dl></section>';
+      text.push('');
+      text.push(s.title.toUpperCase());
+      items.forEach(function (f) { text.push(f.label + ': ' + val(src, s.id, f.k)); });
+    });
+
+    var foot = 'I made this myself. Please ask me before you share it with anyone else.' +
+      (src.updated ? ' Last updated ' + fmtDate(src.updated) + '.' : '');
+    text.push('');
+    text.push(foot);
+    passportText = text.join('\n');
+
+    document.getElementById('passport').innerHTML =
+      '<header class="passport-head"><h2 id="shareTitle">' + (name ? 'Hi, I’m ' + esc(name) : 'Hi, this is my passport') + '</h2>' +
+      (pron ? '<p>' + esc(pron) + '</p>' : '') + '</header>' +
+      '<div class="passport-body">' + (body || '<p class="empty">Nothing to share yet. Add a few answers and turn on the sections you want people to see.</p>') + '</div>' +
+      '<p class="p-foot">' + esc(foot) + '</p>';
+
+    document.getElementById('shareActions').innerHTML = mode === 'example'
+      ? '<button class="btn" type="button" data-go="edit">Start my own</button><button class="btn quiet" type="button" data-go="start">Back</button>'
+      : '<button class="btn" type="button" id="copyBtn">Copy as text</button><button class="btn quiet" type="button" data-go="edit">Keep editing</button><span class="toast" id="copyToast" role="status" aria-live="polite"></span>';
+
+    var copyBtn = document.getElementById('copyBtn');
+    if (copyBtn) copyBtn.addEventListener('click', copyText);
+  }
+  function copyText() {
+    var toast = document.getElementById('copyToast');
+    function done(m) { toast.textContent = m; setTimeout(function () { toast.textContent = ''; }, 2500); }
+    function fallback() {
+      var r = document.createRange();
+      r.selectNodeContents(document.getElementById('passport'));
+      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+      done('Selected. Press Ctrl+C or Cmd+C to copy.');
+    }
+    try { navigator.clipboard.writeText(passportText).then(function () { done('Copied'); }, fallback); }
+    catch (e) { fallback(); }
+  }
+
+  /* Theme */
+  function applyTheme(t) {
+    if (t) document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme');
+  }
+  try { applyTheme(localStorage.getItem(KEY + '-theme')); } catch (e) {}
+  document.getElementById('themeBtn').addEventListener('click', function () {
+    var cur = document.documentElement.getAttribute('data-theme') ||
+      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = cur === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem(KEY + '-theme', next); } catch (e) {}
+  });
+
+  var h = (location.hash || '').replace('#', '');
+  if (h === 'example') { mode = 'example'; show('share'); }
+  else show(VIEWS.indexOf(h) > -1 ? h : 'start');
+})();
+</script>
+</body>
+</html>

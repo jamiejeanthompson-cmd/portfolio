@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Portfolio Hub, demo with fictional data</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #E7ECF0;
+  --paper: #FBFCFD;
+  --ink: #1C2733;
+  --ink-soft: #4D5B69;
+  --line: #C9D2DA;
+  --accent: #2F5DA8;
+  --accent-ink: #FFFFFF;
+  --on: #2E7D6B;
+  --risk: #B07A12;
+  --off: #B23A48;
+  --on-bg: #E3F1EC;
+  --risk-bg: #F7EDD6;
+  --off-bg: #F6E1E4;
+  --heat-0: #F1F4F7;
+  --heat-1: #D7E3F2;
+  --heat-2: #A9C2E4;
+  --heat-3: #6F96CF;
+  --heat-over: #B23A48;
+  --focus: #2F5DA8;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #141B22;
+    --paper: #1D2630;
+    --ink: #E4EAF0;
+    --ink-soft: #A3B0BD;
+    --line: #33404D;
+    --accent: #7FA6E6;
+    --accent-ink: #0E1620;
+    --on: #5FC2A8;
+    --risk: #E2B04D;
+    --off: #EC7A88;
+    --on-bg: #1E3A33;
+    --risk-bg: #3A3020;
+    --off-bg: #3E2328;
+    --heat-0: #222C37;
+    --heat-1: #24405F;
+    --heat-2: #2F5A8C;
+    --heat-3: #4C7FC4;
+    --heat-over: #C24B5A;
+    --focus: #9DBCF0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #141B22;
+  --paper: #1D2630;
+  --ink: #E4EAF0;
+  --ink-soft: #A3B0BD;
+  --line: #33404D;
+  --accent: #7FA6E6;
+  --accent-ink: #0E1620;
+  --on: #5FC2A8;
+  --risk: #E2B04D;
+  --off: #EC7A88;
+  --on-bg: #1E3A33;
+  --risk-bg: #3A3020;
+  --off-bg: #3E2328;
+  --heat-0: #222C37;
+  --heat-1: #24405F;
+  --heat-2: #2F5A8C;
+  --heat-3: #4C7FC4;
+  --heat-over: #C24B5A;
+  --focus: #9DBCF0;
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 72px); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Barlow", "Segoe UI", system-ui, -apple-system, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  z-index: 10;
+  background: var(--paper);
+}
+button, input, select { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* Header */
+.top {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 5;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+}
+.top-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 14px 20px 0;
+}
+.brand-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.brand-row h1 {
+  margin: 0;
+  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-weight: 700;
+  font-size: 1.75rem;
+  letter-spacing: 0.01em;
+}
+.brand-row p { margin: 0; color: var(--ink-soft); font-size: 0.95rem; }
+.theme-btn {
+  border: 1px solid var(--line);
+  background: transparent;
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+nav.tabs {
+  display: flex;
+  gap: 4px;
+  margin-top: 10px;
+  overflow-x: auto;
+}
+nav.tabs button {
+  border: none;
+  background: none;
+  padding: 10px 14px 12px;
+  cursor: pointer;
+  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+}
+nav.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); }
+
+main { max-width: 1180px; margin: 0 auto; padding: 20px; }
+.view[hidden] { display: none; }
+.lede { margin: 0 0 18px; max-width: 72ch; color: var(--ink-soft); }
+.lede strong { color: var(--ink); font-weight: 600; }
+
+/* Board */
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; align-items: center; }
+.chip {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  border-radius: 999px;
+  padding: 4px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.toolbar select {
+  border: 1px solid var(--line);
+  background: var(--paper);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 0.9rem;
+}
+.phase-head {
+  display: grid;
+  grid-template-columns: 1fr;
+  margin-bottom: 6px;
+}
+.strips { display: flex; flex-direction: column; gap: 8px; }
+.strip {
+  display: grid;
+  grid-template-columns: 6px 92px minmax(0, 1.6fr) minmax(0, 1.4fr) 132px;
+  align-items: stretch;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  width: 100%;
+}
+.strip:hover { border-color: var(--ink-soft); }
+.strip .edge { border-radius: 4px 0 0 4px; }
+.strip.on .edge { background: var(--on); }
+.strip.risk .edge { background: var(--risk); }
+.strip.off .edge { background: var(--off); }
+.strip .code {
+  font-family: "Barlow Condensed", "Arial Narrow", sans-serif;
+  font-weight: 700;
+  font-size: 1.05rem;
+  white-space: nowrap;
+  padding: 10px 12px;
+  border-right: 1px dashed var(--line);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.strip .code small { font-family: "Barlow", sans-serif; font-weight: 500; font-size: 0.75rem; color: var(--ink-soft); }
+.strip .what { padding: 10px 14px; border-right: 1px dashed var(--line); min-width: 0; }
+.strip .what b { display: block; font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.strip .what span { color: var(--ink-soft); font-size: 0.875rem; }
+.strip .track { padding: 10px 14px; border-right: 1px dashed var(--line); min-width: 0; }
+.track-bar { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-bottom: 4px; }
+.track-bar i { height: 8px; background: var(--heat-0); border: 1px solid var(--line); border-radius: 2px; }
+.track-bar i.done { background: var(--ink-soft); border-color: var(--ink-soft); }
+.track-bar i.now { background: var(--accent); border-color: var(--accent); }
+.track-label { font-size: 0.8rem; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.strip .status { padding: 10px 12px; display: flex; flex-direction: column; justify-content: center; gap: 2px; font-size: 0.85rem; }
+.pill { display: inline-block; border-radius: 3px; padding: 1px 7px; font-weight: 600; font-size: 0.78rem; width: fit-content; }
+.pill.on { background: var(--on-bg); color: var(--on); }
+.pill.risk { background: var(--risk-bg); color: var(--risk); }
+.pill.off { background: var(--off-bg); color: var(--off); }
+.empty { padding: 28px; text-align: center; color: var(--ink-soft); background: var(--paper); border: 1px dashed var(--line); border-radius: 4px; }
+
+/* Detail dialog */
+dialog {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--paper);
+  color: var(--ink);
+  width: min(680px, calc(100vw - 32px));
+  max-height: calc(100vh - 64px);
+  padding: 0;
+}
+dialog::backdrop { background: rgba(20, 27, 34, 0.45); }
+.dlg-head { display: flex; justify-content: space-between; gap: 12px; padding: 18px 22px 12px; border-bottom: 1px solid var(--line); }
+.dlg-head h2 { margin: 0; font-family: "Barlow Condensed", sans-serif; font-size: 1.5rem; line-height: 1.2; }
+.dlg-head p { margin: 2px 0 0; color: var(--ink-soft); font-size: 0.9rem; }
+.close-btn { border: 1px solid var(--line); background: transparent; border-radius: 6px; padding: 2px 10px; cursor: pointer; height: fit-content; }
+.dlg-body { padding: 16px 22px 22px; overflow-y: auto; }
+.dlg-body h3 { font-family: "Barlow Condensed", sans-serif; font-size: 1.1rem; margin: 18px 0 6px; }
+.dlg-body h3:first-child { margin-top: 0; }
+.ms { list-style: none; margin: 0; padding: 0; }
+.ms li { display: grid; grid-template-columns: 22px 1fr auto; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); font-size: 0.95rem; }
+.ms li:last-child { border-bottom: none; }
+.ms .tick { color: var(--on); font-weight: 700; }
+.ms .date { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+.dlg-body ul.plain { margin: 0; padding-left: 18px; }
+.decision { background: var(--risk-bg); border-left: 4px solid var(--risk); padding: 10px 12px; border-radius: 3px; }
+.health-edit { display: flex; gap: 6px; flex-wrap: wrap; }
+
+/* Intake */
+.intake-list { display: flex; flex-direction: column; gap: 10px; }
+.req {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 112px;
+  gap: 14px;
+}
+.req h3 { margin: 0; font-size: 1.05rem; font-weight: 600; }
+.req .meta { color: var(--ink-soft); font-size: 0.875rem; margin: 2px 0 10px; }
+.sliders { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px 16px; }
+.sliders label { font-size: 0.85rem; color: var(--ink-soft); display: flex; flex-direction: column; }
+.sliders input { width: 100%; accent-color: var(--accent); }
+.score { text-align: right; display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; gap: 8px; }
+.score .num { font-family: "Barlow Condensed", sans-serif; font-weight: 700; font-size: 2.2rem; line-height: 1; }
+.score .num small { font-size: 0.9rem; color: var(--ink-soft); font-weight: 500; }
+.btn {
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--accent-ink);
+  border-radius: 6px;
+  padding: 6px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+.btn.ghost { background: transparent; color: var(--accent); }
+
+/* Capacity */
+.heat-wrap { overflow-x: auto; background: var(--paper); border: 1px solid var(--line); border-radius: 4px; }
+table.heat { border-collapse: collapse; width: 100%; min-width: 620px; font-variant-numeric: tabular-nums; }
+.heat th, .heat td { padding: 10px 12px; text-align: center; border-bottom: 1px solid var(--line); }
+.heat th { font-family: "Barlow Condensed", sans-serif; font-weight: 600; font-size: 1rem; }
+.heat th:first-child, .heat td:first-child { text-align: left; }
+.heat td.cell { font-weight: 600; }
+.heat td.l0 { background: var(--heat-0); }
+.heat td.l1 { background: var(--heat-1); }
+.heat td.l2 { background: var(--heat-2); }
+.heat td.l3 { background: var(--heat-3); color: #FFFFFF; }
+.heat td.over { background: var(--heat-over); color: #FFFFFF; }
+.legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; font-size: 0.85rem; color: var(--ink-soft); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 14px; height: 14px; border-radius: 2px; display: inline-block; border: 1px solid var(--line); }
+.callouts { margin-top: 18px; display: grid; gap: 8px; max-width: 80ch; }
+.callouts p { margin: 0; padding: 10px 12px; background: var(--paper); border: 1px solid var(--line); border-left: 4px solid var(--off); border-radius: 3px; }
+
+/* Report */
+.report {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 22px 26px;
+  max-width: 82ch;
+}
+.report h2 { font-family: "Barlow Condensed", sans-serif; margin: 0 0 4px; font-size: 1.6rem; }
+.report .sub { margin: 0 0 16px; color: var(--ink-soft); }
+.report h3 { font-family: "Barlow Condensed", sans-serif; font-size: 1.15rem; margin: 18px 0 6px; }
+.report ul { margin: 0; padding-left: 20px; }
+.report li { margin-bottom: 4px; }
+.report-actions { display: flex; gap: 8px; margin: 0 0 14px; flex-wrap: wrap; align-items: center; }
+.toast { color: var(--on); font-weight: 600; font-size: 0.9rem; }
+
+footer { max-width: 1180px; margin: 0 auto; padding: 8px 20px 32px; color: var(--ink-soft); font-size: 0.85rem; }
+footer button { background: none; border: none; color: var(--accent); cursor: pointer; padding: 0; text-decoration: underline; font-size: 0.85rem; }
+
+@media (max-width: 760px) {
+  .strip { grid-template-columns: 6px 78px minmax(0, 1fr); }
+  .strip .track, .strip .status { grid-column: 2 / -1; border-right: none; border-top: 1px dashed var(--line); }
+  .strip .what { border-right: none; }
+  .strip .edge { grid-row: span 3; }
+  .strip .status { flex-direction: row; flex-wrap: wrap; align-items: center; gap: 4px 10px; }
+  .req { grid-template-columns: 1fr; }
+  .score { flex-direction: row; align-items: center; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .strip { transition: border-color 120ms ease; }
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-inner">
+    <div class="brand-row">
+      <div>
+        <h1>Portfolio Hub</h1>
+        <p>Harbor &amp; Pine Group, a fictional company with fictional data</p>
+      </div>
+      <button class="theme-btn" id="themeBtn" type="button">Switch theme</button>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Views">
+      <button role="tab" id="tab-board" aria-controls="view-board" data-view="board">Board</button>
+      <button role="tab" id="tab-intake" aria-controls="view-intake" data-view="intake">Intake</button>
+      <button role="tab" id="tab-capacity" aria-controls="view-capacity" data-view="capacity">Capacity</button>
+      <button role="tab" id="tab-report" aria-controls="view-report" data-view="report">Executive report</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="view" id="view-board" role="tabpanel" aria-labelledby="tab-board">
+    <p class="lede" id="boardLede"></p>
+    <div class="toolbar" role="group" aria-label="Filter by health">
+      <button class="chip" data-health="all" aria-pressed="true" type="button">All</button>
+      <button class="chip" data-health="on" aria-pressed="false" type="button">On track</button>
+      <button class="chip" data-health="risk" aria-pressed="false" type="button">At risk</button>
+      <button class="chip" data-health="off" aria-pressed="false" type="button">Off track</button>
+      <label>
+        <span class="visually-hidden" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Filter by brand</span>
+        <select id="brandFilter" aria-label="Filter by brand"></select>
+      </label>
+    </div>
+    <div class="strips" id="strips"></div>
+  </section>
+
+  <section class="view" id="view-intake" role="tabpanel" aria-labelledby="tab-intake" hidden>
+    <p class="lede">New requests are scored before anyone commits capacity. Adjust the sliders to see how priority shifts, then accept a request to move it onto the board in the Assess phase. <strong>Priority weights value at 40%, urgency 25%, strategic fit 25%, and effort 10% (lower effort scores higher).</strong></p>
+    <div class="intake-list" id="intakeList"></div>
+  </section>
+
+  <section class="view" id="view-capacity" role="tabpanel" aria-labelledby="tab-capacity" hidden>
+    <p class="lede">Planned allocation as a share of each team’s available capacity. Anything over 100% means work is committed that the team can’t deliver without a tradeoff.</p>
+    <div class="heat-wrap"><table class="heat" id="heat"></table></div>
+    <div class="legend" aria-hidden="true">
+      <span><i style="background:var(--heat-1)"></i>Under 60%</span>
+      <span><i style="background:var(--heat-2)"></i>60 to 85%</span>
+      <span><i style="background:var(--heat-3)"></i>85 to 100%</span>
+      <span><i style="background:var(--heat-over)"></i>Over capacity</span>
+    </div>
+    <div class="callouts" id="callouts"></div>
+  </section>
+
+  <section class="view" id="view-report" role="tabpanel" aria-labelledby="tab-report" hidden>
+    <p class="lede">Generated from the live portfolio data on this page, so leaders get the picture without anyone chasing status updates. Change an initiative’s health on the board and this report updates.</p>
+    <div class="report-actions">
+      <button class="btn" id="copyReport" type="button">Copy report</button>
+      <span class="toast" id="copyToast" role="status" aria-live="polite"></span>
+    </div>
+    <article class="report" id="reportBody"></article>
+  </section>
+</main>
+
+<footer>
+  <p>A sanitized recreation of a portfolio management app built with AI for a real delivery organization. Every company, person, and number here is invented. Changes you make are saved in this browser only. <button id="resetBtn" type="button">Reset demo data</button></p>
+</footer>
+
+<dialog id="detail" aria-labelledby="dlgTitle">
+  <div class="dlg-head">
+    <div>
+      <h2 id="dlgTitle"></h2>
+      <p id="dlgSub"></p>
+    </div>
+    <button class="close-btn" id="dlgClose" type="button">Close</button>
+  </div>
+  <div class="dlg-body" id="dlgBody"></div>
+</dialog>
+
+<script>
+(function () {
+  var PHASES = ['Intake', 'Assess', 'Discover', 'Commit', 'Execute', 'Launch', 'Close'];
+  var HEALTH_LABEL = { on: 'On track', risk: 'At risk', off: 'Off track' };
+  var MONTHS = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'];
+  var TODAY = '2026-10-19';
+
+  var SEED = {
+    initiatives: [
+      { id: 'HP-104', name: 'Unified partner intake', brand: 'Harbor Outfitters', owner: 'Dana Ortiz', team: 'Delivery PMO', phase: 4, health: 'on', value: 1400000,
+        summary: 'Replace 14 email aliases and 9 chat channels with one intake form and routing rules.',
+        milestones: [{ label: 'Current-state process map', date: '2026-09-12', done: true }, { label: 'Routing rules approved', date: '2026-10-10', done: true }, { label: 'Pilot with two brands', date: '2026-11-07', done: false }, { label: 'Full cutover', date: '2026-12-12', done: false }],
+        risks: ['Two brands still forwarding requests by email during pilot'], decision: null, deps: [] },
+      { id: 'HP-109', name: 'AI case triage and routing', brand: 'Tidewater Rentals', owner: 'Marcus Webb', team: 'AI Squad', phase: 5, health: 'on', value: 620000,
+        summary: 'Classify inbound cases with an LLM and route to the right queue, freeing roughly 1,400 hours a year.',
+        milestones: [{ label: 'Labeled training sample', date: '2026-08-22', done: true }, { label: 'Accuracy above 92% in test', date: '2026-09-30', done: true }, { label: 'Go-live', date: '2026-10-28', done: false }, { label: 'Hypercare exit', date: '2026-11-25', done: false }],
+        risks: ['Hypercare staffing thin during holiday peak'], decision: null, deps: ['HP-104'] },
+      { id: 'HP-112', name: 'Commission platform migration', brand: 'Summit Supply', owner: 'Priya Natarajan', team: 'CRM Platform', phase: 4, health: 'risk', value: 2100000,
+        summary: 'Move variable pay calculations off spreadsheets onto a commission platform with live HR data feeds.',
+        milestones: [{ label: 'Vendor contract signed', date: '2026-07-15', done: true }, { label: 'HR data integration', date: '2026-10-03', done: true }, { label: 'UAT complete', date: '2026-10-31', done: false }, { label: 'First quarterly payout', date: '2027-01-09', done: false }],
+        risks: ['UAT behind by 9 days; testers shared with year-end close', 'Plan rules still changing for two sales roles'],
+        decision: 'Approve parallel testing with a second tester pool to recover 6 of the 9 days.', deps: [] },
+      { id: 'HP-115', name: 'Vendor quality program', brand: 'Pine Ridge Lodges', owner: 'Sam Achebe', team: 'Vendor Ops', phase: 4, health: 'on', value: 480000,
+        summary: 'First objective quality scorecard for outsourced support agents, tied to targeted coaching.',
+        milestones: [{ label: 'KPI definitions agreed', date: '2026-09-05', done: true }, { label: 'Scorecard live', date: '2026-10-17', done: true }, { label: 'First coaching cycle', date: '2026-11-14', done: false }],
+        risks: [], decision: null, deps: [] },
+      { id: 'HP-118', name: 'Loyalty data foundation', brand: 'Pine Ridge Lodges', owner: 'Elena Brooks', team: 'Data & Insights', phase: 2, health: 'risk', value: 3200000,
+        summary: 'Single member record across three loyalty programs to support cross-brand offers.',
+        milestones: [{ label: 'Source system inventory', date: '2026-10-09', done: true }, { label: 'Data ownership decision', date: '2026-10-30', done: false }, { label: 'Architecture review', date: '2026-11-20', done: false }],
+        risks: ['No agreed owner for member identity data', 'Privacy review not yet scheduled'],
+        decision: 'Name a single accountable owner for member identity data.', deps: [] },
+      { id: 'HP-121', name: 'Field sales playbooks', brand: 'Summit Supply', owner: 'Jordan Lee', team: 'Enablement', phase: 3, health: 'on', value: 350000,
+        summary: 'Role-based playbooks in the sales enablement tool, informed by top-performer interviews.',
+        milestones: [{ label: 'SME interviews', date: '2026-10-02', done: true }, { label: 'Scope and funding approved', date: '2026-10-24', done: false }],
+        risks: [], decision: null, deps: [] },
+      { id: 'HP-124', name: 'Booking flow accessibility fixes', brand: 'Harbor Outfitters', owner: 'Chris Tanaka', team: 'CRM Platform', phase: 4, health: 'off', value: 900000,
+        summary: 'Resolve 41 accessibility defects ahead of a regulatory deadline.',
+        milestones: [{ label: 'Defect audit', date: '2026-08-29', done: true }, { label: 'Critical defects fixed', date: '2026-10-15', done: false }, { label: 'External re-audit', date: '2026-11-19', done: false }],
+        risks: ['Critical fixes missed 10/15; engineering capacity pulled to HP-112', 'Re-audit date fixed by regulator'],
+        decision: 'Rebalance two engineers from HP-112 for three weeks, or accept re-audit risk.', deps: ['HP-112'] },
+      { id: 'HP-127', name: 'Executive escalation process', brand: 'Tidewater Rentals', owner: 'Dana Ortiz', team: 'Delivery PMO', phase: 6, health: 'on', value: 210000,
+        summary: 'Clear criteria and paths for escalations so leaders only see what needs them.',
+        milestones: [{ label: 'Escalation criteria published', date: '2026-08-08', done: true }, { label: 'Volume down 35%', date: '2026-10-01', done: true }, { label: 'Handoff to operations', date: '2026-10-22', done: false }],
+        risks: [], decision: null, deps: [] },
+      { id: 'HP-130', name: 'Scheduling tool relaunch', brand: 'Summit Supply', owner: 'Jordan Lee', team: 'Enablement', phase: 5, health: 'risk', value: 540000,
+        summary: 'Relaunch the meeting routing tool with cleaner territory rules after a stalled first launch.',
+        milestones: [{ label: 'Territory rules rebuilt', date: '2026-09-19', done: true }, { label: 'Relaunch', date: '2026-10-21', done: false }, { label: 'Adoption at 80%', date: '2026-12-05', done: false }],
+        risks: ['Adoption at 52% in pilot region'], decision: null, deps: [] },
+      { id: 'HP-133', name: 'Contract renewal tracker', brand: 'Pine Ridge Lodges', owner: 'Sam Achebe', team: 'Vendor Ops', phase: 1, health: 'on', value: 300000,
+        summary: 'One view of every vendor and license renewal, with lead time to negotiate.',
+        milestones: [{ label: 'Assessment complete', date: '2026-11-06', done: false }],
+        risks: [], decision: null, deps: [] },
+      { id: 'HP-136', name: 'Self-service knowledge base', brand: 'Tidewater Rentals', owner: 'Marcus Webb', team: 'AI Squad', phase: 3, health: 'off', value: 760000,
+        summary: 'AI-assisted answers for agents, grounded in approved articles.',
+        milestones: [{ label: 'Content audit', date: '2026-09-26', done: true }, { label: 'Funding decision', date: '2026-10-17', done: false }],
+        risks: ['Funding decision slipped twice', '40% of source articles out of date'],
+        decision: 'Fund a two-sprint content cleanup before the build, or narrow scope to the top 50 articles.', deps: ['HP-109'] },
+      { id: 'HP-139', name: 'Quarterly planning cadence', brand: 'Harbor Outfitters', owner: 'Elena Brooks', team: 'Delivery PMO', phase: 6, health: 'on', value: 0,
+        summary: 'A shared quarterly planning rhythm with capacity-based commitments.',
+        milestones: [{ label: 'First capacity-based plan', date: '2026-07-01', done: true }, { label: 'Retrospective', date: '2026-10-29', done: false }],
+        risks: [], decision: null, deps: [] }
+    ],
+    requests: [
+      { id: 'REQ-41', title: 'Partner payout dispute dashboard', requester: 'Finance, Summit Supply', brand: 'Summit Supply', team: 'Data & Insights', s: { value: 4, urgency: 4, fit: 4, effort: 2 } },
+      { id: 'REQ-42', title: 'Lodge check-in kiosk refresh', requester: 'Operations, Pine Ridge Lodges', brand: 'Pine Ridge Lodges', team: 'CRM Platform', s: { value: 3, urgency: 2, fit: 3, effort: 4 } },
+      { id: 'REQ-43', title: 'AI drafting for vendor escalations', requester: 'Vendor Ops', brand: 'Tidewater Rentals', team: 'AI Squad', s: { value: 4, urgency: 3, fit: 5, effort: 2 } },
+      { id: 'REQ-44', title: 'New brand onboarding playbook', requester: 'Strategy office', brand: 'Harbor Outfitters', team: 'Enablement', s: { value: 5, urgency: 3, fit: 5, effort: 3 } }
+    ],
+    capacity: {
+      'Delivery PMO':    [72, 80, 78, 70, 66, 60],
+      'CRM Platform':    [104, 112, 96, 88, 82, 75],
+      'AI Squad':        [88, 94, 100, 92, 84, 80],
+      'Data & Insights': [58, 66, 84, 98, 106, 102],
+      'Vendor Ops':      [64, 70, 62, 58, 55, 52],
+      'Enablement':      [82, 90, 76, 68, 64, 60]
+    }
+  };
+
+  var KEY = 'portfolio-hub-demo-v1';
+  var state;
+  function load() {
+    try {
+      var raw = localStorage.getItem(KEY);
+      if (raw) { state = JSON.parse(raw); return; }
+    } catch (e) {}
+    state = JSON.parse(JSON.stringify(SEED));
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+  }
+  load();
+
+  var filters = { health: 'all', brand: 'all' };
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+  function fmtDate(iso) {
+    var d = new Date(iso + 'T12:00:00');
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  }
+  function fmtMoney(n) {
+    if (!n) return 'Capability build';
+    if (n >= 1000000) return '$' + (n / 1000000).toFixed(1).replace(/\.0$/, '') + 'M value';
+    return '$' + Math.round(n / 1000) + 'K value';
+  }
+  function nextMilestone(it) {
+    for (var i = 0; i < it.milestones.length; i++) { if (!it.milestones[i].done) return it.milestones[i]; }
+    return null;
+  }
+  function brands() {
+    var set = {};
+    state.initiatives.forEach(function (i) { set[i.brand] = true; });
+    return Object.keys(set).sort();
+  }
+
+  /* Board */
+  function renderBoard() {
+    var all = state.initiatives;
+    var counts = { on: 0, risk: 0, off: 0 };
+    var decisions = 0;
+    all.forEach(function (i) { counts[i.health]++; if (i.decision) decisions++; });
+    document.getElementById('boardLede').innerHTML =
+      '<strong>' + all.length + ' initiatives in flight across four brands.</strong> ' +
+      counts.on + ' on track, ' + counts.risk + ' at risk, ' + counts.off + ' off track, and ' +
+      decisions + ' waiting on a leadership decision. Select a strip to see milestones, risks, and the decision needed.';
+
+    var sel = document.getElementById('brandFilter');
+    if (!sel.options.length) {
+      var opts = '<option value="all">All brands</option>';
+      brands().forEach(function (b) { opts += '<option value="' + esc(b) + '">' + esc(b) + '</option>'; });
+      sel.innerHTML = opts;
+    }
+
+    var list = all.filter(function (i) {
+      return (filters.health === 'all' || i.health === filters.health) &&
+             (filters.brand === 'all' || i.brand === filters.brand);
+    }).sort(function (a, b) {
+      var order = { off: 0, risk: 1, on: 2 };
+      return order[a.health] - order[b.health] || b.phase - a.phase;
+    });
+
+    var html = '';
+    list.forEach(function (it) {
+      var bar = '';
+      for (var p = 0; p < PHASES.length; p++) {
+        bar += '<i class="' + (p < it.phase ? 'done' : (p === it.phase ? 'now' : '')) + '"></i>';
+      }
+      var nm = nextMilestone(it);
+      html += '<button type="button" class="strip ' + it.health + '" data-id="' + it.id + '" aria-label="' +
+        esc(it.id + ', ' + it.name + ', ' + HEALTH_LABEL[it.health] + ', ' + PHASES[it.phase] + ' phase') + '">' +
+        '<span class="edge"></span>' +
+        '<span class="code">' + it.id + '<small>' + esc(it.team) + '</small></span>' +
+        '<span class="what"><b>' + esc(it.name) + '</b><span>' + esc(it.brand) + ', ' + esc(it.owner) + '</span></span>' +
+        '<span class="track"><span class="track-bar" aria-hidden="true">' + bar + '</span>' +
+        '<span class="track-label">' + PHASES[it.phase] + (nm ? (nm.date < TODAY ? ': overdue, ' : ': next is ') + esc(nm.label) + ', ' + fmtDate(nm.date) : ': all milestones complete') + '</span></span>' +
+        '<span class="status"><span class="pill ' + it.health + '">' + HEALTH_LABEL[it.health] + '</span>' +
+        '<span>' + fmtMoney(it.value) + '</span>' + (it.decision ? '<span>Decision needed</span>' : '') + '</span>' +
+        '</button>';
+    });
+    document.getElementById('strips').innerHTML = html || '<p class="empty">No initiatives match these filters. Choose All to see the full portfolio.</p>';
+  }
+
+  document.querySelectorAll('.chip').forEach(function (c) {
+    c.addEventListener('click', function () {
+      filters.health = c.getAttribute('data-health');
+      document.querySelectorAll('.chip').forEach(function (x) { x.setAttribute('aria-pressed', String(x === c)); });
+      renderBoard();
+    });
+  });
+  document.getElementById('brandFilter').addEventListener('change', function (e) {
+    filters.brand = e.target.value;
+    renderBoard();
+  });
+  document.getElementById('strips').addEventListener('click', function (e) {
+    var s = e.target.closest('.strip');
+    if (s) openDetail(s.getAttribute('data-id'));
+  });
+
+  /* Detail */
+  var dlg = document.getElementById('detail');
+  function openDetail(id) {
+    var it = state.initiatives.filter(function (i) { return i.id === id; })[0];
+    if (!it) return;
+    document.getElementById('dlgTitle').textContent = it.id + ': ' + it.name;
+    document.getElementById('dlgSub').textContent = it.brand + ', owned by ' + it.owner + ' (' + it.team + '), ' + PHASES[it.phase] + ' phase';
+    var ms = '';
+    it.milestones.forEach(function (m) {
+      ms += '<li><span class="tick" aria-hidden="true">' + (m.done ? '\u2713' : '') + '</span><span>' + esc(m.label) +
+        (m.done ? '<span style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)"> (complete)</span>' : '') +
+        '</span><span class="date">' + fmtDate(m.date) + '</span></li>';
+    });
+    var risks = it.risks.length ? '<ul class="plain">' + it.risks.map(function (r) { return '<li>' + esc(r) + '</li>'; }).join('') + '</ul>' : '<p>No open risks.</p>';
+    var deps = it.deps.length ? '<p>Depends on ' + it.deps.map(function (d) {
+      var x = state.initiatives.filter(function (i) { return i.id === d; })[0];
+      return esc(d + (x ? ' (' + x.name + ', ' + HEALTH_LABEL[x.health].toLowerCase() + ')' : ''));
+    }).join(' and ') + '.</p>' : '<p>No dependencies on other initiatives.</p>';
+    var health = '<div class="health-edit" role="group" aria-label="Set health">' + ['on', 'risk', 'off'].map(function (h) {
+      return '<button type="button" class="chip" data-sethealth="' + h + '" aria-pressed="' + (it.health === h) + '">' + HEALTH_LABEL[h] + '</button>';
+    }).join('') + '</div>';
+    document.getElementById('dlgBody').innerHTML =
+      '<h3>What it delivers</h3><p>' + esc(it.summary) + '</p><p>' + fmtMoney(it.value) + '</p>' +
+      (it.decision ? '<h3>Decision needed</h3><p class="decision">' + esc(it.decision) + '</p>' : '') +
+      '<h3>Milestones</h3><ul class="ms">' + ms + '</ul>' +
+      '<h3>Risks and blockers</h3>' + risks +
+      '<h3>Dependencies</h3>' + deps +
+      '<h3>Health</h3><p style="margin-top:0;color:var(--ink-soft);font-size:0.9rem">Owners update health here. The board and the executive report update with it.</p>' + health;
+    dlg.querySelectorAll('[data-sethealth]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        it.health = b.getAttribute('data-sethealth');
+        save();
+        dlg.querySelectorAll('[data-sethealth]').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+        renderBoard();
+        renderReport();
+      });
+    });
+    if (typeof dlg.showModal === 'function') dlg.showModal(); else dlg.setAttribute('open', '');
+  }
+  document.getElementById('dlgClose').addEventListener('click', function () {
+    if (typeof dlg.close === 'function') dlg.close(); else dlg.removeAttribute('open');
+  });
+  dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+
+  /* Intake */
+  function priority(s) {
+    var raw = s.value * 0.4 + s.urgency * 0.25 + s.fit * 0.25 + (6 - s.effort) * 0.1;
+    return Math.round(((raw - 1) / 4) * 100);
+  }
+  var SLIDERS = [['value', 'Business value'], ['urgency', 'Urgency'], ['fit', 'Strategic fit'], ['effort', 'Effort']];
+  function renderIntake() {
+    var reqs = state.requests.slice().sort(function (a, b) { return priority(b.s) - priority(a.s); });
+    if (!reqs.length) {
+      document.getElementById('intakeList').innerHTML = '<p class="empty">The intake queue is clear. Every request has been accepted onto the board. Reset the demo data to see the queue again.</p>';
+      return;
+    }
+    var html = '';
+    reqs.forEach(function (r) {
+      var sl = '';
+      SLIDERS.forEach(function (pair) {
+        var k = pair[0];
+        sl += '<label>' + pair[1] + ': <b data-out="' + r.id + '-' + k + '">' + r.s[k] + '</b>' +
+          '<input type="range" min="1" max="5" step="1" value="' + r.s[k] + '" data-req="' + r.id + '" data-key="' + k + '" aria-label="' + pair[1] + ' for ' + esc(r.title) + '"></label>';
+      });
+      html += '<div class="req"><div><h3>' + esc(r.title) + '</h3>' +
+        '<p class="meta">' + r.id + ', requested by ' + esc(r.requester) + ', would land with ' + esc(r.team) + '</p>' +
+        '<div class="sliders">' + sl + '</div></div>' +
+        '<div class="score"><span class="num" data-score="' + r.id + '">' + priority(r.s) + '<small>/100</small></span>' +
+        '<button class="btn" type="button" data-accept="' + r.id + '">Accept to board</button></div></div>';
+    });
+    document.getElementById('intakeList').innerHTML = html;
+  }
+  document.getElementById('intakeList').addEventListener('input', function (e) {
+    var t = e.target;
+    if (!t.matches('input[type="range"]')) return;
+    var r = state.requests.filter(function (x) { return x.id === t.getAttribute('data-req'); })[0];
+    var k = t.getAttribute('data-key');
+    r.s[k] = Number(t.value);
+    document.querySelector('[data-out="' + r.id + '-' + k + '"]').textContent = t.value;
+    document.querySelector('[data-score="' + r.id + '"]').innerHTML = priority(r.s) + '<small>/100</small>';
+    save();
+  });
+  document.getElementById('intakeList').addEventListener('change', function (e) {
+    if (e.target.matches('input[type="range"]')) renderIntake();
+  });
+  document.getElementById('intakeList').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-accept]');
+    if (!b) return;
+    var id = b.getAttribute('data-accept');
+    var r = state.requests.filter(function (x) { return x.id === id; })[0];
+    state.requests = state.requests.filter(function (x) { return x.id !== id; });
+    var num = 140 + state.initiatives.length;
+    state.initiatives.push({
+      id: 'HP-' + num, name: r.title, brand: r.brand, owner: 'Unassigned', team: r.team, phase: 1, health: 'on', value: 0,
+      summary: 'Accepted from intake with a priority score of ' + priority(r.s) + '. Assessment will size value, effort, and capacity.',
+      milestones: [{ label: 'Assessment complete', date: '2026-11-20', done: false }], risks: [], decision: null, deps: []
+    });
+    save();
+    renderIntake();
+    renderBoard();
+    renderReport();
+  });
+
+  /* Capacity */
+  function level(v) {
+    if (v > 100) return 'over';
+    if (v >= 85) return 'l3';
+    if (v >= 60) return 'l2';
+    return 'l1';
+  }
+  function renderCapacity() {
+    var head = '<thead><tr><th scope="col">Team</th>' + MONTHS.map(function (m) { return '<th scope="col">' + m + '</th>'; }).join('') + '</tr></thead>';
+    var body = '<tbody>';
+    var notes = [];
+    Object.keys(state.capacity).forEach(function (team) {
+      var row = state.capacity[team];
+      body += '<tr><th scope="row">' + esc(team) + '</th>';
+      var overMonths = [];
+      row.forEach(function (v, i) {
+        body += '<td class="cell ' + level(v) + '">' + v + '%</td>';
+        if (v > 100) overMonths.push(MONTHS[i]);
+      });
+      body += '</tr>';
+      if (overMonths.length) {
+        notes.push('<p><b>' + esc(team) + '</b> is over capacity in ' + overMonths.join(', ') + '. Decide what moves, shrinks, or gets resourced before those months start.</p>');
+      }
+    });
+    body += '</tbody>';
+    document.getElementById('heat').innerHTML = '<caption style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Team allocation by month</caption>' + head + body;
+    document.getElementById('callouts').innerHTML = notes.join('');
+  }
+
+  /* Report */
+  var reportText = '';
+  function renderReport() {
+    var all = state.initiatives;
+    var c = { on: 0, risk: 0, off: 0 };
+    all.forEach(function (i) { c[i.health]++; });
+    var totalValue = all.reduce(function (s, i) { return s + i.value; }, 0);
+    var atRiskValue = all.filter(function (i) { return i.health !== 'on'; }).reduce(function (s, i) { return s + i.value; }, 0);
+    var decisions = all.filter(function (i) { return i.decision; });
+    var troubled = all.filter(function (i) { return i.health !== 'on'; }).sort(function (a, b) { return b.value - a.value; });
+    var open = [];
+    all.forEach(function (i) { i.milestones.forEach(function (m) { if (!m.done) open.push({ it: i, m: m }); }); });
+    open.sort(function (a, b) { return a.m.date < b.m.date ? -1 : 1; });
+    var overdue = open.filter(function (u) { return u.m.date < TODAY; });
+    var upcoming = open.filter(function (u) { return u.m.date >= TODAY; }).slice(0, 5);
+    var over = Object.keys(state.capacity).filter(function (t) { return state.capacity[t].some(function (v) { return v > 100; }); });
+    function m(n) { return '$' + (n / 1000000).toFixed(1) + 'M'; }
+
+    var html = '<h2>Portfolio summary</h2><p class="sub">Harbor &amp; Pine Group, as of ' + fmtDate(TODAY) + ', 2026</p>' +
+      '<h3>Where things stand</h3><p>' + all.length + ' initiatives are in flight, representing ' + m(totalValue) + ' in planned value. ' +
+      c.on + ' are on track, ' + c.risk + ' are at risk, and ' + c.off + ' are off track. ' + m(atRiskValue) + ' of planned value sits in initiatives that are not on track.</p>';
+    html += '<h3>Decisions needed from leadership</h3>' + (decisions.length ? '<ul>' + decisions.map(function (i) {
+      return '<li><b>' + i.id + ', ' + esc(i.name) + ':</b> ' + esc(i.decision) + '</li>'; }).join('') + '</ul>' : '<p>No decisions waiting.</p>');
+    html += '<h3>Initiatives needing attention</h3>' + (troubled.length ? '<ul>' + troubled.map(function (i) {
+      return '<li><b>' + i.id + ', ' + esc(i.name) + '</b> (' + HEALTH_LABEL[i.health].toLowerCase() + '): ' + esc(i.risks[0] || 'Owner reviewing') + '</li>'; }).join('') + '</ul>' : '<p>Everything is on track.</p>');
+    if (overdue.length) {
+      html += '<h3>Overdue milestones</h3><ul>' + overdue.map(function (u) {
+        return '<li>' + esc(u.m.label) + ' (' + u.it.id + '), due ' + fmtDate(u.m.date) + '</li>'; }).join('') + '</ul>';
+    }
+    html += '<h3>Coming up next</h3><ul>' + upcoming.map(function (u) {
+      return '<li>' + fmtDate(u.m.date) + ': ' + esc(u.m.label) + ' (' + u.it.id + ')</li>'; }).join('') + '</ul>';
+    html += '<h3>Capacity</h3><p>' + (over.length ? over.join(' and ') + (over.length > 1 ? ' are' : ' is') + ' committed beyond capacity in at least one month of the plan. Expect tradeoff recommendations at the next portfolio review.' : 'No team is committed beyond capacity.') + '</p>';
+    document.getElementById('reportBody').innerHTML = html;
+
+    reportText = document.getElementById('reportBody').innerText;
+  }
+  document.getElementById('copyReport').addEventListener('click', function () {
+    var toast = document.getElementById('copyToast');
+    function done(msg) { toast.textContent = msg; setTimeout(function () { toast.textContent = ''; }, 2500); }
+    try {
+      navigator.clipboard.writeText(reportText).then(function () { done('Report copied'); }, function () { fallback(); });
+    } catch (e) { fallback(); }
+    function fallback() {
+      var range = document.createRange();
+      range.selectNodeContents(document.getElementById('reportBody'));
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(range);
+      done('Report selected. Press Ctrl+C or Cmd+C to copy.');
+    }
+  });
+
+  /* Tabs and links into views */
+  var VIEWS = ['board', 'intake', 'capacity', 'report'];
+  function show(view) {
+    if (VIEWS.indexOf(view) === -1) view = 'board';
+    VIEWS.forEach(function (v) {
+      document.getElementById('view-' + v).hidden = v !== view;
+      var t = document.getElementById('tab-' + v);
+      t.setAttribute('aria-selected', String(v === view));
+      t.tabIndex = v === view ? 0 : -1;
+    });
+    try { localStorage.setItem(KEY + '-tab', view); } catch (e) {}
+  }
+  document.querySelectorAll('nav.tabs button').forEach(function (b) {
+    b.addEventListener('click', function () { show(b.getAttribute('data-view')); });
+    b.addEventListener('keydown', function (e) {
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      var i = VIEWS.indexOf(b.getAttribute('data-view'));
+      var n = VIEWS[(i + (e.key === 'ArrowRight' ? 1 : VIEWS.length - 1)) % VIEWS.length];
+      show(n);
+      document.getElementById('tab-' + n).focus();
+    });
+  });
+
+  /* Theme */
+  var themeBtn = document.getElementById('themeBtn');
+  function applyTheme(t) {
+    if (t) document.documentElement.setAttribute('data-theme', t); else document.documentElement.removeAttribute('data-theme');
+  }
+  try { applyTheme(localStorage.getItem(KEY + '-theme')); } catch (e) {}
+  themeBtn.addEventListener('click', function () {
+    var current = document.documentElement.getAttribute('data-theme') ||
+      (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    try { localStorage.setItem(KEY + '-theme', next); } catch (e) {}
+  });
+
+  document.getElementById('resetBtn').addEventListener('click', function () {
+    state = JSON.parse(JSON.stringify(SEED));
+    save();
+    renderAll();
+  });
+
+  function renderAll() { renderBoard(); renderIntake(); renderCapacity(); renderReport(); }
+  renderAll();
+
+  var start = (location.hash || '').replace('#', '');
+  if (!start) { try { start = localStorage.getItem(KEY + '-tab') || 'board'; } catch (e) { start = 'board'; } }
+  show(start);
+  window.scrollTo(0, 0);
+  window.addEventListener('hashchange', function () { show(location.hash.replace('#', '')); });
+})();
+</script>
+</body>
+</html>
